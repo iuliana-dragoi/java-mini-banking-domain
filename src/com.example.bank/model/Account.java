@@ -3,13 +3,13 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public sealed abstract class Account permits SavingsAccount{
+public sealed abstract class Account permits SavingsAccount, BusinessAccount, CreditAccount {
 
     private final long id;
-    protected double balance;
+    protected double balance = 0;
     private Customer owner;
 
-    private final List<Transaction> transactions = new ArrayList<>();
+    protected final List<Transaction> transactions = new ArrayList<>();
 
     protected Account(long id, Customer owner) {
         this.id = id;
@@ -48,5 +48,22 @@ public sealed abstract class Account permits SavingsAccount{
     @Override
     public String toString() {
         return "Account{id=%d, balance=%.2f}".formatted(id, balance);
+    }
+
+    public static class Statistics {
+
+        public static double totalDeposits(Account account) {
+            return account.getTransactions().stream()
+                    .filter(t -> t.type().equals("DEPOSIT"))
+                    .mapToDouble(Transaction::amount)
+                    .sum();
+        }
+
+        public static double totalWithdrawals(Account account) {
+            return account.getTransactions().stream()
+                    .filter(t -> t.type().equals("WITHDRAW"))
+                    .mapToDouble(Transaction::amount)
+                    .sum();
+        }
     }
 }

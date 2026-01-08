@@ -1,5 +1,5 @@
 import exception.BankException;
-import model.Customer;
+import model.*;
 import service.BankService;
 import service.InMemoryBankService;
 import util.IdGenerator;
@@ -9,28 +9,43 @@ import util.IdGenerator;
 void main() {
     //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
     // to see how IntelliJ IDEA suggests fixing it.
-    BankService service = new InMemoryBankService();
+    BankService bank = new InMemoryBankService();
 
-    var ana = new Customer(IdGenerator.nextId(), "Ana", "ana@test.com");
-    var ion = new Customer(IdGenerator.nextId(), "Ion", "ion@test.com");
+    Customer alice = new Customer(IdGenerator.nextId(), "Alice", "alice@test.com");
+    Customer bob = new Customer(IdGenerator.nextId(), "Bob", "bob@test.com");
+    Customer charlie = new Customer(IdGenerator.nextId(), "Charlie", "charlie@test.com");
 
-    var account1 = service.createSavingsAccount(ana);
-    var account2 = service.createSavingsAccount(ion);
+    Account aliceSavings = new SavingsAccount(IdGenerator.nextId(), alice);
+    Account bobBusiness = new BusinessAccount(IdGenerator.nextId(), bob, 500);
+    Account charlieCredit = new CreditAccount(IdGenerator.nextId(), charlie, 1000);
+
+    bank.addAccount(alice, aliceSavings);
+    bank.addAccount(bob, bobBusiness);
+    bank.addAccount(charlie, charlieCredit);
 
     try {
-        service.deposit(account1.getId(), 100);
-        service.deposit(account2.getId(), 500);
-        service.withdraw(account1.getId(), 50);
-        service.transfer(account1.getId(), account2.getId(), 20);
+        aliceSavings.deposit(300);
+        aliceSavings.withdraw(100);
 
-    }
-    catch (BankException e) {
-        System.out.println("Business error: " + e.getMessage());
-    }
-    finally {
-        System.out.println("End of operations");
+        bobBusiness.deposit(200);
+        bobBusiness.withdraw(600); // allowed, overdraft 500, sold 200 -> 600-200=400 < overdraft ok?
+
+        charlieCredit.withdraw(800); // allowed, credit limit 1000
+        charlieCredit.deposit(500);
+
+    } catch (BankException e) {
+        System.err.println("Error: " + e.getMessage());
     }
 
-    System.out.println(account1);
-    System.out.println(account2);
+    Map<Customer, List<Account>> allAccounts = bank.getAllAccounts();
+
+    allAccounts.forEach((customer, accounts) -> {
+        System.out.println("Customer: " + customer.name());
+        for (Account acc : accounts) {
+            System.out.println("  Account #" + acc.getId() + " | Balance: " + acc.getBalance());
+            System.out.println("    Total Deposits: " + Account.Statistics.totalDeposits(acc));
+            System.out.println("    Total Withdrawals: " + Account.Statistics.totalWithdrawals(acc));
+        }
+        System.out.println("------------------------------------------------");
+    });
 }

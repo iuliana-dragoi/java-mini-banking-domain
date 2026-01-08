@@ -1,22 +1,36 @@
 package service;
 
 import exception.AccountNotFoundException;
-import model.Account;
-import model.Customer;
-import model.SavingsAccount;
+import model.*;
 import util.IdGenerator;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryBankService implements BankService {
 
     private final Map<Long, Account> accounts = new HashMap<>();
+    private final Map<Customer, List<Account>> customerAccounts = new HashMap<>();
 
     @Override
     public Account createSavingsAccount(Customer customer) {
         long id = IdGenerator.nextId();
         Account account = new SavingsAccount(id, customer);
+        accounts.put(id, account);
+        return account;
+    }
+
+    @Override
+    public Account createBusinessAccount(Customer customer) {
+        long id = IdGenerator.nextId();
+        Account account = new BusinessAccount(id, customer, 10000);
+        accounts.put(id, account);
+        return account;
+    }
+
+    @Override
+    public Account createCreditAccount(Customer customer) {
+        long id = IdGenerator.nextId();
+        Account account = new CreditAccount(id, customer, 5000);
         accounts.put(id, account);
         return account;
     }
@@ -38,6 +52,24 @@ public class InMemoryBankService implements BankService {
 
         from.withdraw(amount);
         to.deposit(amount);
+    }
+
+    @Override
+    public void addAccount(Customer customer, Account account) {
+        customerAccounts.computeIfAbsent(customer, c -> new ArrayList<>()).add(account);
+    }
+
+    @Override
+    public List<Account> getAccounts(Customer customer) {
+        return customerAccounts.containsKey(customer) ?
+                List.copyOf(customerAccounts.get(customer)) : Collections.emptyList();
+    }
+
+    @Override
+    public Map<Customer, List<Account>> getAllAccounts() {
+        Map<Customer, List<Account>> snapshot = new HashMap<>();
+        customerAccounts.forEach((c, accounts) -> snapshot.put(c, List.copyOf(accounts)));
+        return snapshot;
     }
 
     private Account findAccount(long id) {
