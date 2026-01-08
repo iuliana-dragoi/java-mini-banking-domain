@@ -20,3 +20,12 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+
+### Java ###
+# Ignore compiled class files
+*.class
+# Ignore IntelliJ build output
+/out/
+# Ignore IntelliJ project files
+.idea/
+*.iml

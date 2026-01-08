@@ -23,14 +23,12 @@ public class InMemoryBankService implements BankService {
 
     @Override
     public void deposit(long accountId, double amount) {
-        Account account = findAccount(accountId);
-        account.deposit(amount);
+        findAccount(accountId).deposit(amount);
     }
 
     @Override
     public void withdraw(long accountId, double amount) {
-        Account account = findAccount(accountId);
-        account.withdraw(amount);
+        findAccount(accountId).withdraw(amount);
     }
 
     @Override

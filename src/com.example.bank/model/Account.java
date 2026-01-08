@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Account {
+public sealed abstract class Account permits SavingsAccount{
 
     private final long id;
     protected double balance;
@@ -24,16 +24,8 @@ public abstract class Account {
         return balance;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
     public Customer getOwner() {
         return owner;
-    }
-
-    public void setOwner(Customer owner) {
-        this.owner = owner;
     }
 
     public List<Transaction> getTransactions() {
@@ -49,7 +41,7 @@ public abstract class Account {
 
     public abstract void withdraw(double amount);
 
-    protected void recordTransaction(Transaction tx) {
+    protected void record(Transaction tx) {
         transactions.add(tx);
     }
 

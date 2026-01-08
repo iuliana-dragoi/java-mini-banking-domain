@@ -21,7 +21,7 @@ void main() {
         service.deposit(account1.getId(), 100);
         service.deposit(account2.getId(), 500);
         service.withdraw(account1.getId(), 50);
-        service.transfer(account1.getId(), account2.getId(), 100);
+        service.transfer(account1.getId(), account2.getId(), 20);
 
     }
     catch (BankException e) {
