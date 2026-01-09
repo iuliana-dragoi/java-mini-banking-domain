@@ -16,6 +16,7 @@ public class InMemoryBankService implements BankService {
         long id = IdGenerator.nextId();
         Account account = new SavingsAccount(id, customer);
         accounts.put(id, account);
+        addAccount(customer, account);
         return account;
     }
 
@@ -24,6 +25,7 @@ public class InMemoryBankService implements BankService {
         long id = IdGenerator.nextId();
         Account account = new BusinessAccount(id, customer, 10000);
         accounts.put(id, account);
+        addAccount(customer, account);
         return account;
     }
 
@@ -32,6 +34,25 @@ public class InMemoryBankService implements BankService {
         long id = IdGenerator.nextId();
         Account account = new CreditAccount(id, customer, 5000);
         accounts.put(id, account);
+        addAccount(customer, account);
+        return account;
+    }
+
+    @Override
+    public Account createPremiumAccount(Customer customer) {
+        long id = IdGenerator.nextId();
+        Account account = new PremiumAccount(id, customer);
+        accounts.put(id, account);
+        addAccount(customer, account);
+        return account;
+    }
+
+    @Override
+    public Account createInvestmentAccount(Customer customer) {
+        long id = IdGenerator.nextId();
+        Account account = new InvestmentAccount(id, customer);
+        accounts.put(id, account);
+        addAccount(customer, account);
         return account;
     }
 

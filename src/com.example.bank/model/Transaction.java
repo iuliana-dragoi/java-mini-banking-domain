@@ -12,10 +12,20 @@ public record Transaction(TransactionType type, double amount, Instant instant) 
         return new Transaction(TransactionType.WITHDRAW, amount, Instant.now());
     }
 
+    public static Transaction applyInterest(double amount) {
+        return new Transaction(TransactionType.INTEREST, amount, Instant.now());
+    }
+
+    public static Transaction applyBonusInterest(double amount) {
+        return new Transaction(TransactionType.BONUS_INTEREST, amount, Instant.now());
+    }
+
     public enum TransactionType {
         DEPOSIT,
         WITHDRAW,
-        TRANSFER
+        TRANSFER,
+        INTEREST,
+        BONUS_INTEREST
     };
 }
 

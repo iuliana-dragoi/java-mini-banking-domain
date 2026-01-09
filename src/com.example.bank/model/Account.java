@@ -3,17 +3,17 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public sealed abstract class Account permits SavingsAccount, BusinessAccount, CreditAccount {
+public sealed abstract class Account permits SavingsAccount, BusinessAccount, CreditAccount, InvestmentAccount, PremiumAccount {
 
     private final long id;
-    protected double balance = 0;
+    protected double balance;
     private Customer owner;
-
     protected final List<Transaction> transactions = new ArrayList<>();
 
     protected Account(long id, Customer owner) {
         this.id = id;
         this.owner = owner;
+        this.balance = 0;
     }
 
     public long getId() {

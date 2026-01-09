@@ -14,6 +14,10 @@ public interface BankService {
 
     Account createCreditAccount(Customer customer);
 
+    Account createInvestmentAccount(Customer customer);
+
+    Account createPremiumAccount(Customer customer);
+
     void deposit(long accountId, double amount);
 
     void withdraw(long accountId, double amount);
