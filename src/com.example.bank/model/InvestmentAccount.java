@@ -5,6 +5,7 @@ import exception.BankException;
 public final class InvestmentAccount extends Account {
 
     private final double interestRate = 0.05;
+    private final Object lock = new Object();
 
     public InvestmentAccount(long id, Customer owner) {
         super(id, owner);
@@ -12,11 +13,14 @@ public final class InvestmentAccount extends Account {
 
     @Override
     public void withdraw(double amount) {
-        if(amount > balance) {
-            throw new BankException("Insufficient funds in Investment Account!");
+        synchronized (lock) {
+            if(amount > balance) {
+                throw new BankException("Insufficient funds in Investment Account!");
+            }
+
+            balance -= amount;
+            record(Transaction.withdraw(amount));
         }
-        balance -= amount;
-        transactions.add(Transaction.withdraw(amount));
     }
 
     public void applyInterest() {

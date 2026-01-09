@@ -4,6 +4,8 @@ import exception.InsufficientFundException;
 
 public final class SavingsAccount extends Account {
 
+    private final Object lock = new Object();
+
     public SavingsAccount(long id, Customer owner) {
         super(id, owner);
     }
@@ -14,12 +16,13 @@ public final class SavingsAccount extends Account {
            throw new IllegalArgumentException("Amounte must be positive!");
        }
 
-        if(amount > this.balance) {
-            throw new InsufficientFundException("Not enough money. Balance = " + balance);
+        synchronized(lock) {
+            if(amount > this.balance) {
+                throw new InsufficientFundException("Not enough money. Balance = " + balance);
+            }
+            balance -= amount;
+            record(Transaction.withdraw(amount));
         }
-
-        balance -= amount;
-        record(Transaction.withdraw(amount));
     }
 
     @Override

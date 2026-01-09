@@ -6,6 +6,7 @@ public final class PremiumAccount extends Account {
 
     private final double overdraftLimit;
     private final double bonusInterestRate;
+    private final Object lock = new Object();
 
     public PremiumAccount(long id, Customer owner) {
         super(id, owner);
@@ -15,11 +16,14 @@ public final class PremiumAccount extends Account {
 
     @Override
     public void withdraw(double amount) throws BankException {
-        if (amount > balance + overdraftLimit) {
-            throw new BankException("Overdraft limit exceeded for PremiumAccount");
+        synchronized (lock) {
+            if (amount > balance + overdraftLimit) {
+                throw new BankException("Overdraft limit exceeded for PremiumAccount");
+            }
+
+            balance -= amount;
+            record(Transaction.withdraw(amount));
         }
-        balance -= amount;
-        transactions.add(Transaction.withdraw(amount));
     }
 
     @Override

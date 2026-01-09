@@ -5,6 +5,7 @@ import exception.BankException;
 public final class BusinessAccount extends Account {
 
     private final double overdraftLimit;
+    private final Object lock = new Object();
 
     public BusinessAccount(long id, Customer owner, double overdraftLimit) {
         super(id, owner);
@@ -13,12 +14,14 @@ public final class BusinessAccount extends Account {
 
     @Override
     public void withdraw(double amount) {
-        if(amount > balance + overdraftLimit) {
-            throw new BankException("Overdraft limit exceeded!");
-        }
+        synchronized (lock) {
+            if(amount > balance + overdraftLimit) {
+                throw new BankException("Overdraft limit exceeded!");
+            }
 
-        balance -= amount;
-        transactions.add(Transaction.withdraw(amount));
+            balance -= amount;
+            record(Transaction.withdraw(amount));
+        }
     }
 
     @Override
