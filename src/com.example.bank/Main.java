@@ -1,5 +1,6 @@
 import exception.BankException;
 import model.*;
+import service.BankAuditService;
 import service.BankService;
 import service.InMemoryBankService;
 import util.IdGenerator;
@@ -24,8 +25,9 @@ void main() throws InterruptedException {
     printAccounts(bank, alice);
     printAccounts(bank, bob);
 
-    int numOperations = 100;
-    int poolSize = 5;
+    System.out.println();
+    int numOperations = 100;//1_000_000;
+    int poolSize = 15;
     Random rand = new Random();
 
     ExecutorService executorService = Executors.newFixedThreadPool(poolSize);
@@ -44,7 +46,7 @@ void main() throws InterruptedException {
                         aliceSavings.withdraw(amount);
                     }
                     case 2 -> {
-                        bank.transfer(aliceSavings.getId(), bobSavings.getId(), amount);
+//                        bank.transfer(aliceSavings.getId(), bobSavings.getId(), amount); // TODO
                     }
                 }
 
@@ -58,8 +60,12 @@ void main() throws InterruptedException {
     executorService.shutdown();
     executorService.awaitTermination(1, TimeUnit.MINUTES);
 
+    System.out.println();
     printAccounts(bank, alice);
     printAccounts(bank, bob);
+
+    boolean ok = BankAuditService.verifyAllAccounts(bank.getAllAccounts().values().stream().flatMap(List::stream).toList());
+    System.out.println("All accounts consistent? " + ok);
 }
 
 void execute() {
@@ -67,7 +73,6 @@ void execute() {
 }
 
 void printAccounts(BankService bank, Customer customer) {
-    System.out.println();
     List<Account> accounts = bank.getAccounts(customer);
     accounts.forEach(a -> {
         System.out.println(   a.getClass().getSimpleName() + " -> " + a);
