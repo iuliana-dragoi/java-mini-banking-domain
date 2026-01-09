@@ -12,6 +12,10 @@ public record Transaction(TransactionType type, double amount, Instant instant) 
         return new Transaction(TransactionType.WITHDRAW, amount, Instant.now());
     }
 
+    public static Transaction transfer(double amount) {
+        return new Transaction(TransactionType.TRANSFER, amount, Instant.now());
+    }
+
     public static Transaction applyInterest(double amount) {
         return new Transaction(TransactionType.INTEREST, amount, Instant.now());
     }

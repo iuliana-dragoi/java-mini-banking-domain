@@ -31,6 +31,10 @@ public sealed abstract class Account permits SavingsAccount, BusinessAccount, Cr
         return owner;
     }
 
+    public Object getLock() {
+        return lock;
+    }
+
     public List<Transaction> getTransactions() {
         return List.copyOf(this.transactions);
         // Prevents list modification from outside
@@ -44,6 +48,7 @@ public sealed abstract class Account permits SavingsAccount, BusinessAccount, Cr
         synchronized (lock) {
             balance += amount;
             transactions.add(Transaction.deposit(amount));
+            System.out.println("Deposit: " + Thread.currentThread().getName() + ", balance=" + this.getBalance());
         }
     }
 
@@ -53,6 +58,12 @@ public sealed abstract class Account permits SavingsAccount, BusinessAccount, Cr
 
     protected void record(Transaction tx) {
         transactions.add(tx);
+    }
+
+    public void recordTransfer(Transaction tx) {
+        if(tx.type().equals(Transaction.TransactionType.TRANSFER)) {
+            transactions.add(tx);
+        }
     }
 
     @Override

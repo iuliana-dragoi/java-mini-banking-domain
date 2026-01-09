@@ -12,38 +12,61 @@ void main() throws InterruptedException {
 
     BankService bank = new InMemoryBankService();
     Customer alice = new Customer(IdGenerator.nextId(), "Alice", "alice@test.com");
+    Customer bob = new Customer(IdGenerator.nextId(), "Bob", "bob@test.com");
 
-    bank.createSavingsAccount(alice);
-    bank.createBusinessAccount(alice);
-    bank.createCreditAccount(alice);
-    bank.createInvestmentAccount(alice);
-    bank.createPremiumAccount(alice);
+    Account aliceSavings = bank.createSavingsAccount(alice);
+    Account bobSavings = bank.createSavingsAccount(bob);
 
-    Account savings = bank.getAccounts(alice).stream()
-            .filter(a -> a.getType() == AccountType.SAVINGS)
-            .findFirst().orElseThrow();
+    bank.deposit(aliceSavings.getId(), 1000);
+    bank.deposit(bobSavings.getId(), 550);
 
-    bank.deposit(savings.getId(), 1000);
+    System.out.println("Initial Balances:");
+    printAccounts(bank, alice);
+    printAccounts(bank, bob);
 
-    Thread t1 = new Thread(() -> {
-       savings.withdraw(500);
-    });
+    int numOperations = 100;
+    int poolSize = 5;
+    Random rand = new Random();
 
-    Thread t2 = new Thread(() -> {
-        savings.withdraw(50);
-    });
+    ExecutorService executorService = Executors.newFixedThreadPool(poolSize);
+    for(int i = 0; i < numOperations; i++) {
 
-    t1.start();
-    t2.start();
+        executorService.submit(() -> {
+            int op = rand.nextInt(3);
+            double amount = rand.nextInt(200) + 1;
 
-    t1.join();
-    t2.join();
+            try{
+                switch (op) {
+                    case 0 -> {
+                        aliceSavings.deposit(amount);
+                    }
+                    case 1 -> {
+                        aliceSavings.withdraw(amount);
+                    }
+                    case 2 -> {
+                        bank.transfer(aliceSavings.getId(), bobSavings.getId(), amount);
+                    }
+                }
 
-    System.out.println("Final Balance: " + savings.getBalance());
-    printAccount(bank, alice);
+            }
+            catch (Exception e) {
+                System.out.printf("[Thread %s] Operation error: %s%n", Thread.currentThread().getName(), e.getMessage());
+            }
+        });
+    }
+
+    executorService.shutdown();
+    executorService.awaitTermination(1, TimeUnit.MINUTES);
+
+    printAccounts(bank, alice);
+    printAccounts(bank, bob);
 }
 
-void printAccount(BankService bank, Customer customer) {
+void execute() {
+
+}
+
+void printAccounts(BankService bank, Customer customer) {
     System.out.println();
     List<Account> accounts = bank.getAccounts(customer);
     accounts.forEach(a -> {

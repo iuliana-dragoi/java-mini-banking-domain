@@ -62,16 +62,31 @@ public class InMemoryBankService implements BankService {
 
     @Override
     public void withdraw(long accountId, double amount) {
-        findAccount(accountId).withdraw(amount);
-    }
+        findAccount(accountId).withdraw(amount);}
 
     @Override
     public void transfer(long fromId, long toId, double amount) {
         var from = findAccount(fromId);
         var to = findAccount(toId);
 
-        from.withdraw(amount);
-        to.deposit(amount);
+        if(from == to) throw new IllegalArgumentException("Cannot transfer to te same account!");
+
+        // Find the order to avoid Deadlock
+        Account first = fromId < toId ? from : to;
+        Account second = fromId < toId ? to : from;
+
+        synchronized (first.getLock()) {
+            synchronized (second.getLock()) {
+                from.withdraw(amount);
+                to.deposit(amount);
+
+                Transaction tx = Transaction.transfer(amount);
+                from.recordTransfer(tx);
+                to.recordTransfer(tx);
+
+                System.out.println("Transfer: " + Thread.currentThread().getName() + " " + amount + " done. From: " + from.getBalance() + ", To: " + to.getBalance());
+            }
+        }
     }
 
     @Override

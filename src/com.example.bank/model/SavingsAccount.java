@@ -20,7 +20,7 @@ public final class SavingsAccount extends Account {
             }
             balance -= amount;
             record(Transaction.withdraw(amount));
-            System.out.println(Thread.currentThread().getName() + "dine, balance=" + this.getBalance());
+            System.out.println("Withdraw: " + Thread.currentThread().getName() + ", balance=" + this.getBalance());
         }
     }
 
