@@ -11,8 +11,6 @@ void main() {
     // to see how IntelliJ IDEA suggests fixing it.
 
     BankService bank = new InMemoryBankService();
-    InMemoryBankService test = new InMemoryBankService();
-
     Customer alice = new Customer(IdGenerator.nextId(), "Alice", "alice@test.com");
 
     bank.createSavingsAccount(alice);
@@ -20,6 +18,12 @@ void main() {
     bank.createCreditAccount(alice);
     bank.createInvestmentAccount(alice);
     bank.createPremiumAccount(alice);
+
+    Account savings = bank.getAccounts(alice).stream()
+            .filter(a -> a.getType() == AccountType.SAVINGS)
+            .findFirst().orElseThrow();
+
+    bank.deposit(savings.getId(), 10000);
 
     printAccount(bank, alice);
 }

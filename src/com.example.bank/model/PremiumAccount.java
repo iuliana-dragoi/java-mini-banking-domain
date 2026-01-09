@@ -33,4 +33,9 @@ public final class PremiumAccount extends Account {
         balance += bonus;
         transactions.add(Transaction.applyBonusInterest(bonus));
     }
+
+    @Override
+    public AccountType getType() {
+        return AccountType.PREMIUM;
+    }
 }

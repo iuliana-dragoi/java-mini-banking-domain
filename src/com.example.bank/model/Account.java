@@ -41,13 +41,10 @@ public sealed abstract class Account permits SavingsAccount, BusinessAccount, Cr
 
     public abstract void withdraw(double amount);
 
+    public abstract AccountType getType();
+
     protected void record(Transaction tx) {
         transactions.add(tx);
-    }
-
-    @Override
-    public String toString() {
-        return "Account{id=%d, balance=%.2f}".formatted(id, balance);
     }
 
     public static class Statistics {
@@ -65,5 +62,10 @@ public sealed abstract class Account permits SavingsAccount, BusinessAccount, Cr
                     .mapToDouble(Transaction::amount)
                     .sum();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Account{id=%d, balance=%.2f}".formatted(id, balance);
     }
 }

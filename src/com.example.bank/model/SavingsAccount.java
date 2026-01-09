@@ -21,4 +21,9 @@ public final class SavingsAccount extends Account {
         balance -= amount;
         record(Transaction.withdraw(amount));
     }
+
+    @Override
+    public AccountType getType() {
+        return AccountType.SAVINGS;
+    }
 }

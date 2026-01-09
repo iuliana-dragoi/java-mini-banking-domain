@@ -28,4 +28,9 @@ public final class InvestmentAccount extends Account {
     public double getProjectedBalance(int years) {
         return balance * Math.pow(1 + interestRate, years);
     }
+
+    @Override
+    public AccountType getType() {
+        return AccountType.INVESTMENT;
+    }
 }

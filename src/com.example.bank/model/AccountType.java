@@ -1,5 +1,9 @@
 package model;
 
 public enum AccountType {
-    SAVINGS
+    SAVINGS,
+    BUSINESS,
+    CREDIT,
+    INVESTMENT,
+    PREMIUM
 }

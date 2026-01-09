@@ -3,7 +3,6 @@ package service;
 import exception.AccountNotFoundException;
 import model.*;
 import util.IdGenerator;
-
 import java.util.*;
 
 public class InMemoryBankService implements BankService {

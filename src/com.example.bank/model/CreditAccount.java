@@ -20,4 +20,9 @@ public final class CreditAccount extends Account {
         balance -= amount;
         transactions.add(Transaction.withdraw(amount));
     }
+
+    @Override
+    public AccountType getType() {
+        return AccountType.CREDIT;
+    }
 }
