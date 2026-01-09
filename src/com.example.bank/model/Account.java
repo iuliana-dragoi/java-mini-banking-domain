@@ -1,14 +1,15 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public sealed abstract class Account permits SavingsAccount, BusinessAccount, CreditAccount, InvestmentAccount, PremiumAccount {
 
     private final long id;
     protected double balance;
     private Customer owner;
-    protected final List<Transaction> transactions = new ArrayList<>();
+    protected final List<Transaction> transactions = new CopyOnWriteArrayList<>();
+    protected final Object lock = new Object();
 
     protected Account(long id, Customer owner) {
         this.id = id;
@@ -21,7 +22,9 @@ public sealed abstract class Account permits SavingsAccount, BusinessAccount, Cr
     }
 
     public double getBalance() {
-        return balance;
+        synchronized (lock) {
+            return balance;
+        }
     }
 
     public Customer getOwner() {
@@ -34,9 +37,14 @@ public sealed abstract class Account permits SavingsAccount, BusinessAccount, Cr
     }
 
     public void deposit(double amount) {
-        assert amount > 0 : "Amount must be positive";
-        balance += amount;
-        transactions.add(Transaction.deposit(amount));
+        if(amount <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+
+        synchronized (lock) {
+            balance += amount;
+            transactions.add(Transaction.deposit(amount));
+        }
     }
 
     public abstract void withdraw(double amount);
@@ -47,25 +55,8 @@ public sealed abstract class Account permits SavingsAccount, BusinessAccount, Cr
         transactions.add(tx);
     }
 
-    public static class Statistics {
-
-        public static double totalDeposits(Account account) {
-            return account.getTransactions().stream()
-                    .filter(t -> t.type().equals("DEPOSIT"))
-                    .mapToDouble(Transaction::amount)
-                    .sum();
-        }
-
-        public static double totalWithdrawals(Account account) {
-            return account.getTransactions().stream()
-                    .filter(t -> t.type().equals("WITHDRAW"))
-                    .mapToDouble(Transaction::amount)
-                    .sum();
-        }
-    }
-
     @Override
     public String toString() {
-        return "Account{id=%d, balance=%.2f}".formatted(id, balance);
+        return "Account{id=%d, balance=%.2f, owner=%s}".formatted(id, balance, owner.name());
     }
 }

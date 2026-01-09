@@ -6,7 +6,6 @@ public final class PremiumAccount extends Account {
 
     private final double overdraftLimit;
     private final double bonusInterestRate;
-    private final Object lock = new Object();
 
     public PremiumAccount(long id, Customer owner) {
         super(id, owner);

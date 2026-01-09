@@ -5,7 +5,6 @@ import exception.BankException;
 public final class BusinessAccount extends Account {
 
     private final double overdraftLimit;
-    private final Object lock = new Object();
 
     public BusinessAccount(long id, Customer owner, double overdraftLimit) {
         super(id, owner);

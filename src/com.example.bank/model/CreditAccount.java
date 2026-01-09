@@ -5,7 +5,6 @@ import exception.BankException;
 public final class CreditAccount extends Account {
 
     private final double creditLimit;
-    private final Object lock = new Object();
 
     public CreditAccount(long id, Customer owner, double creditLimit) {
         super(id, owner);

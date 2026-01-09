@@ -5,7 +5,6 @@ import exception.BankException;
 public final class InvestmentAccount extends Account {
 
     private final double interestRate = 0.05;
-    private final Object lock = new Object();
 
     public InvestmentAccount(long id, Customer owner) {
         super(id, owner);

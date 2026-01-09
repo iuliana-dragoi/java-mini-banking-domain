@@ -4,8 +4,6 @@ import exception.InsufficientFundException;
 
 public final class SavingsAccount extends Account {
 
-    private final Object lock = new Object();
-
     public SavingsAccount(long id, Customer owner) {
         super(id, owner);
     }
@@ -22,6 +20,7 @@ public final class SavingsAccount extends Account {
             }
             balance -= amount;
             record(Transaction.withdraw(amount));
+            System.out.println(Thread.currentThread().getName() + "dine, balance=" + this.getBalance());
         }
     }
 

@@ -27,12 +27,10 @@ void main() throws InterruptedException {
 
     Thread t1 = new Thread(() -> {
        savings.withdraw(500);
-        System.out.println("Thread 1 done, balance: " + savings.getBalance());
     });
 
     Thread t2 = new Thread(() -> {
         savings.withdraw(50);
-        System.out.println("Thread 2 done, balance: " + savings.getBalance());
     });
 
     t1.start();
@@ -41,9 +39,7 @@ void main() throws InterruptedException {
     t1.join();
     t2.join();
 
-
     System.out.println("Final Balance: " + savings.getBalance());
-
     printAccount(bank, alice);
 }
 
