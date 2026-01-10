@@ -22,7 +22,7 @@ public class DefaultAccountIbanGenerator implements AccountIbanGenerator {
         };
 
         long unique = SEQ.getAndIncrement();
-        String ibanValue = "RO49" + bankCode + String.format("%014d", unique);
+        String ibanValue = "RO49" + bankCode + String.format("%017d", unique);
 
         return new Iban(ibanValue);
     }
