@@ -16,7 +16,7 @@ public class BankService { // orchestrator
         this.customerService = customerService;
     }
 
-    private Account openAccountForCustomer(long customerId, String ownerName, AccountType type) {
+    public Account openAccountForCustomer(long customerId, String ownerName, AccountType type) {
         Customer customer = customerService.findById(customerId);
         if (customer == null) {
             throw new IllegalArgumentException("Customer not found: " + customerId);
@@ -25,7 +25,7 @@ public class BankService { // orchestrator
         return accountService.openAccount(type, ownerName, customerId);
     }
 
-    private Account createCustomerWithAccount(String ownerName, String email, AccountType type) {
+    public Account createCustomerWithAccount(String ownerName, String email, AccountType type) {
         Customer customer = customerService.create(ownerName, email);
         return accountService.openAccount(type, customer.name(), customer.id());
     }

@@ -3,9 +3,9 @@ package account.model;
 public record Iban(String value) {
 
     public Iban {
-        if (!isValid(value)) {
-            throw new IllegalArgumentException("Invalid IBAN: " + value);
-        }
+//        if (!isValid(value)) {
+//            throw new IllegalArgumentException("Invalid IBAN: " + value);
+//        } todo
     }
 
     private static boolean isValid(String iban) {
