@@ -11,4 +11,8 @@ public class AccountIdGenerator {
     public static long nextId() {
         return SEQ.getAndIncrement();
     }
+
+    public static void reset() {
+        SEQ.set(1);
+    }
 }

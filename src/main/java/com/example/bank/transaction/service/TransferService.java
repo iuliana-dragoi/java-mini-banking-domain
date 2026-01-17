@@ -26,7 +26,7 @@ public class TransferService {
         }
 
         Account fromAccount = accountRepository.findById(fromAccountId);
-        Account toAccount = accountRepository.findById(fromAccountId);
+        Account toAccount = accountRepository.findById(toAccountId);
 
         if(fromAccount == null) {
             throw new IllegalArgumentException("Source account not found!");

@@ -26,4 +26,8 @@ public class DefaultAccountIbanGenerator implements AccountIbanGenerator {
 
         return new Iban(ibanValue);
     }
+
+    public static void reset() {
+        SEQ.set(1);
+    }
 }

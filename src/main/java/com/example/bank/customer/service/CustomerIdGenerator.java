@@ -11,4 +11,8 @@ public class CustomerIdGenerator {
     public static long nextId() {
         return SEQ.getAndIncrement();
     }
+
+    public static void reset() {
+        SEQ.set(1);
+    }
 }
