@@ -29,3 +29,24 @@ TestResults.xml
 # Ignore IntelliJ project files
 .idea/
 *.iml
+
+# IntelliJ
+*.iws
+out/
+
+# Jar/artefacts
+*.jar
+*.war
+*.ea
+
+# Lock / temp
+*.lock
+*.bin
+*.probe
+
+# Gradle
+.gradle/
+build/
+
+# Java
+*.log
