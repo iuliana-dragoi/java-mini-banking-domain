@@ -1,3 +1,5 @@
+package com.example.bank.account;
+
 import com.example.bank.account.model.Account;
 import com.example.bank.account.model.AccountType;
 import com.example.bank.account.repository.AccountRepository;
@@ -20,7 +22,6 @@ import com.example.bank.transaction.repository.TransactionRepository;
 import com.example.bank.transaction.repository.TransactionRepositoryImpl;
 import com.example.bank.transaction.service.TransferService;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
